@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cp-gradebook",
+  "private_key_id": "e8acace9751537ee3033a9dd3c277d52833cdd87",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDG1zcbvoX9WLb7\neh6Tdjd7ef03+QDf+1YYCHgv5eXRmYaQJjOVAh2AT2CfVRyQuCvF7+s3jX7OaHqp\nA8BKHwHBLd+HmV8npesNjRziehvruxlFnlquEviq4+lSd0GR5g6NIFLW48Upuy9l\ncuOssBG7uz4rH5SeUhotr8Z/TXYbIe73l7ccvXZ3eLFRA3Mpotp536oO2fLCEpYw\nLlYoRxtW90WVLiNszkWDm9+RZTNaUhujvhgK1COXW2jxC4iTR956nP5eu3/A8wCC\nJLZwR1MHBkYMdZE7KjGhKrwk3JvZjJ/F5Hvca56bi6+BFQ39VxjyMNvI09znIph3\nOFEhc52jAgMBAAECggEAQz3TbofzAtZF5uwIvABdyd1agturbpMtranrjvMVUVi0\nNzob9neFJ3dwauFa7BvD/cdhCWPJrp6JYG+aztYGf1/2eAInOh6zSt1eF76Ig6K9\nbJwc+UIEIrI5HICkxWSBpjr4mJ/k9HRPFmUQVj0iehRbdTTUSufj33BSVYmJ96lc\nsVlYMOQUpsUIduAaEDJZOjKrGJ21w/L+/ypROI/rf2CVO+AkS2rIJMvTt/ctBUcv\n+lINOW7HmsC4H91ZhSb/9aW7twsFU+oRfh9ckLxMnprRMVJDWCCeg+Q/pJP44F0d\nUeIvNxCxiYuhY4K5wsOav2ak6ZSEOyIOYE3HuiDfCQKBgQDu1PEsWlRWSrtBazxj\n6oCfORCxsfHpaV8VYoof+bMYk3PKmhd7RGkSlZ88crXRAzsB3cKJiNWabhEA28Au\ntVgTBV2GF9330Uf4x+6o9NKGi3bFg6/icDKYm0yZUj3P9DcP5qWtgSuKro62KGvE\n2hMpBcYHU+yuoX0xn4acZ5AFSQKBgQDVIlgRzkPAdXImhUeGcy8JYwMnhcU8DcFH\nRANOksgmybok+OO0CBYOZ4KMWutSmjj1qLBY6T+/LHC6hCfhDfc4hXC1LqnHLc1m\nwXAhD2XWB9w5+R4/nYUgEOhP5Zvf5ICuD4vFAMQpr2VlbYVpKcOvkpSPadl6RToZ\nI+rt8f3HiwKBgQCjrUgDb3xxDxI6CTX/+8xeUouAXEVAA7joPPoQY947r4IhjW0e\nS4n+9I+Gq86zCZW896/E9gP9rAT3I6MX36wWjQzFQ0IZ/lFmzA5huDc3ggjJ4C//\n7YifUX8zbEt0YxgBS76ro+SlTG/9osIIzLNo384RY5DHNWFJStzD/62SEQKBgFG5\ny594Qk6IOm8+6ABMJpso1krPZqPyekyDbekxK4KEE9adgWLFPv/i/RIowtd3v6Oj\nPYu6VPFPbyJ2DnyjyEpqEJ/I9t0jWQGv5vkmWFxLw0yPk+O82RFEqnAIkU625gjY\neTXfZ1i8otrTtjZvB1RJlqGvau8RoIeHWExJYJClAoGBANFeFVKnvjChp/0S20Oy\n+I4JLcDTvOmaLm9P644SDyRj52PZ7pbsTt1VHwh+qrQNOyfhVxidc14TqICxZd4d\nsE/Jm7fHVpBXxDuNri4T1mT/4v+6p92jjPApnuoK3mRGnOgtlMu7sgtPuaHKN0it\n69fBkr8omvNKZsecy/WPEQsr\n-----END PRIVATE KEY-----\n",
+  "client_email": "canvas@cp-gradebook.iam.gserviceaccount.com",
+  "client_id": "100922317098463568043",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/canvas%40cp-gradebook.iam.gserviceaccount.com"
+}

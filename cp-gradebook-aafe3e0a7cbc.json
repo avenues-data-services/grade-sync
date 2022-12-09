@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cp-gradebook",
+  "private_key_id": "aafe3e0a7cbc667549f85af603da20ef89454ed4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCHspIsaOmBA+AX\nQ7CT69YstkjvP3PsADrpPpbwmHpGB4QjcZ9W1/bGYP9y0f7IuukKhYNwSlZgFFKb\nkKQgK/rMNLnIJNypdey8CIt7lxJulYTN0lk1envNKj+CB6DivAHN8Trh38BaVwod\nVibA0t5RaIYhFRoZqxKwMuY91cKSBwXHpHEUYgvfQRUGT0mE9Y8/scBfGjKX7sVr\nqCyP0236SLKe7MwDEz+ZkcXm/kP8i0aK6gm+5d2vrmdsWLy4zd92jqO3Dvp9Qz7q\ncsHP3VGpcHrs0cVjawieeV9pLVQre1HGKO0uMPNqjkeuLzEbRYDqatvjqWfI1Kze\nDMIX2iaPAgMBAAECggEAEdOOK2Je5pF9Q2EjldMiED6kJzX1QxgmpRSRXKsTSRbc\nr5FSJuT5KMd+V3Wp3HHdgoHWqg5B+Z5B2eju/sD4UhJNI7Nf/60bu/n9ZO+MPtXK\nnAVZrdJY6DN4I1tgMdkT/ZuGqjysNtH/ZKo4LhWlmhk6oab1hlC4hEgzggUOagNs\nME8xIlS96v2fsWyGvC0W7iDmNjECVYQUq9j/YWRkEOUKfe9L4Rxr3f7soU0sQL3m\nLFI3aiXl1uU5LJ+0ouMZuSB2b3fD8RaA3y/HCwFz1IGpfujKoe392ZPja3a7D4Sb\nNSOvTkQGUfO0ATeLOhKqoHLbA3mnPmN6OJm4cJ9XiQKBgQC8Y17L/UFi/t0atUJF\nlY70Q6HKUU2puS1RWZPY2q4weX8FAD+sbzmw/6FA/L9XB5/J6+dn9dU5ARllhk5t\nyTo0A7D6WzVgvXwTNBZpPhZfo60CK4NEJ8UBcNqi5RLjmenGLy7XgL+o/YoQYW5q\ni+yUBEwa+RM6gVOMpa+afpMhVwKBgQC4Zh6AP51rK5pbXnCTsicaoPXrG98poSXr\nyMOENT+4W6GZbkZOgGEtW1br4RQbLoLiDd04BgL7CZFsHXgYeWO/x8hH0QcvuE0n\n8f0wPaxHQgkrZf9/riNOczEifsa8caS7dISH1IEEjNyNJV48oe9FvhFyzwC5as7C\ndvT6c5DJiQKBgEtKK4i7HnbCBPu3lVTaANf+b5q8A53hNAtfEYeJXjRhWjJVdx0j\nFpt2jqu6V34gveulLEaQKTcvCUdZ9d5KnchL8V8dNKgFEqFaH9rPxYFTmMFVQpDq\nlAGPaNHRW0s7KALcuIvIGNEhAxyo08ghQ9ukHAZrpROsvAdp8FR+Ya7hAoGAHvyi\nIYEPLgQ8wx/ioR8t7Q6hZKnhXXiEC9RH7r6X/53+UO80B1sReXLA75B6NXsiaWRV\nCWYROChKdLWbCdnURlUHNfJNV9qLtKu4lVO30J2rNszEG6uiqTs4RYiyUtZyDUIu\nRzkRmTcmlN1zsZKwx7KB8h4RDBeDuTAOSMwEx6kCgYBQNo//pXyLx8wtOGCZl4il\nzgsr+M9VAj2/zLLbnZvZ9JfoaM1gEFiMauoH2zWXK3IRfhqm3j+trabP0RuTetAt\nzyv8qdEOvddjNes4xUjIEc6C23HXAl8IFKtUTIM3ywK4/GyWQrETbTwM51dXlna1\n+t6pUoHSDh1kf46sLZV6mA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "cp-sheet@cp-gradebook.iam.gserviceaccount.com",
+  "client_id": "104748318197398318893",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cp-sheet%40cp-gradebook.iam.gserviceaccount.com"
+}

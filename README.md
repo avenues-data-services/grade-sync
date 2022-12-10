@@ -1,1 +1,1 @@
-# cp-gradebook
+# grade-sync

@@ -64,3 +64,15 @@ async def get_all_subjects(campus_id: str):
     })
 
     return subjects
+
+async def get_proficiency_values():
+    results = ProficiencyValues.query.all()
+
+    proficiency_values = []
+    for r in results:
+        proficiency_values.append({
+        'proficiencyValueID': r.ProficiencyValueID,
+        'proficiencyDesc': r.ProficiencyDesc,
+    })
+
+    return proficiency_values

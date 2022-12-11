@@ -6,22 +6,12 @@ from vx_api import vx_api_get
 from extension_api import get_all_proficiencies
 from extension_api import get_all_outcomes_links
 from extension_api import get_all_subjects
+from extension_api import get_proficiency_values
 from vx_tasks.get_classes import get_classes
 from vx_tasks.get_qualitative_grades import get_qualitative_grades
 from canvas_tasks.get_students import get_all_students
 from canvas_tasks.get_outcomes import get_outcomes
 from app import app
-
-# from tasks.get_courses_outcomes_list import get_courses_outcomes_list
-# from tasks.get_terms import get_terms
-# from tasks.get_courses import get_courses
-# from tasks.get_assignments import get_assignments
-# from tasks.get_results import get_results
-# from tasks.get_outcomes import get_outcomes
-# from tasks.get_sections import get_sections
-# from tasks.update_sheet import update_sheet
-# from tasks.get_outcomes_list import get_outcomes_list
-# from tasks.update_outcomes_sheet import update_outcomes_sheet
 import time
 
 
@@ -226,7 +216,7 @@ vx_outcomes_data = [
     {'id': 9208, 'description': "Reading: Parafrasear trechos de textos ou discussões para fazer inferências e evitando o plágio."},
     {'id': 9209, 'description': "Reading: Parafrasear trechos de textos ou discussões para fazer inferências e evitando o plágio."},
     {'id': 9211, 'description': "Planning: Organizar um portfólio de trabalhos que ilustram seleção cuidadosa de estilos e gêneros."},
-    {'id': 9219, 'description': "Reading: Envolver-se com leituras literárias que possibilitem o desenvolvimento do senso estético, valorizando a literatura e outras manifestações artístico-culturais em suas dimensões lúdicas, de imaginário e encantamento, bem como reconhec"},
+    {'id': 9219, 'description': "Reading: Envolver-se com leituras literárias que possibilitem o desenvolvimento do senso estético, valorizando a literatura e outras manifestações artístico-culturais em suas dimensões lúdicas, de imaginário e encantamento, bem como reconhecendo o potencial transformador e humanizador da experiência da leitura."},
     {'id': 9217, 'description': "Writing: Produzir textos de diferentes gêneros, considerando:- adequação ao contexto produção;- adequação à forma escrita;- uso da norma culta;- expressão da própria subjetividade e voz;"},
     {'id': 9224, 'description': "Culture: Descrever as tradições, valores, comportamentos, acordos sociais e origens de determinada cultura."},
     {'id': 9225, 'description': "Culture: Descrever as tradições, valores, comportamentos, acordos sociais e origens de determinada cultura."},
@@ -390,7 +380,6 @@ vx_outcomes_data = [
     {'id': 8649, 'description': "Creativity: Create original expressions of emotion, experience, and thought"},
     {'id': 8642, 'description': "Reading: Summarize the main ideas in high school-level texts from a variety of disciplines"},
     {'id': 8631, 'description': "Scientific Method: Construct a testable hypothesis based on observed phenomena with guidance"},
-    {'id': 9304, 'description': "Comment"},
     {'id': 9412, 'description': "Physical health: Demonstrate endurance, strength, flexibility, balance, speed, and agility when performing common activities"},
     {'id': 9415, 'description': "Physical health: Demonstrate endurance, strength, flexibility, balance, speed, and agility when performing common activities"},
     {'id': 9418, 'description': "National History: Analyze the key social, political, and intellectual changes that characterize national history"},
@@ -612,7 +601,7 @@ vx_outcomes_data = [
     {'id': 9230, 'description': "Reading: Compreender a estrutura de composição e a intencionalidade de textos de ficção, poéticos, informativos, jornalísticos e persuasivos."},
     {'id': 9222, 'description': "Writing: Aprimorar a análise linguística ou semiótica sobre o sistema de escrita, o sistema da língua e a norma-padrão em textos de diferentes linguagens e estilos."},
     {'id': 9214, 'description': "Planning: Retomar projetos de escrita e leitura com objetivo de aprimoramento."},
-    {'id': 9206, 'description': "Reading: Envolver-se com leituras literárias que possibilitem o desenvolvimento do senso estético, valorizando a literatura e outras manifestações artístico-culturais em suas dimensões lúdicas, de imaginário e encantamento, bem como reconhec"},
+    {'id': 9206, 'description': "Reading: Envolver-se com leituras literárias que possibilitem o desenvolvimento do senso estético, valorizando a literatura e outras manifestações artístico-culturais em suas dimensões lúdicas, de imaginário e encantamento, bem como reconhecendo o potencial transformador e humanizador da experiência da leitura."},
     {'id': 9195, 'description': "Planning: Organizar um portfólio de trabalhos que ilustram seleção cuidadosa de estilos e gêneros."},
     {'id': 9330, 'description': "Creativity: Create original expressions of emotion, experience, and thought"},
     {'id': 9353, 'description': "Creativity: Create original expressions of emotion, experience, and thought"},
@@ -755,6 +744,19 @@ def update_grades(campus):
     # get all subjects (Canvas Extension DB)
     subjects = asyncio.run(get_all_subjects(school_id))
 
+    # get all proficiency values (Canvas Extension DB)
+    proficiency_values = asyncio.run(get_proficiency_values())
+
+    # add proficiency as expected by Veracross
+    for p in proficiencies:
+        for v in proficiency_values:
+            if p['proficiencyValueID'] == v['proficiencyValueID']:
+                proficiency_desc_words = v['proficiencyDesc'].split(' ')
+                veracrossProf = ''
+                for w in proficiency_desc_words:
+                    veracrossProf = veracrossProf + w[0]
+                p['veracrossProficiency'] = veracrossProf
+
     # add veracrossSubjectID to each proficiency
     for p in proficiencies:
         for l in outcomes_links:
@@ -784,60 +786,67 @@ def update_grades(campus):
         for o in outcomes:
             if p['outcomeID'] == o['outcomeID']:
                 p['outcomeTitle'] = o['outcomeTitle']
-                p['outcomeDescription'] = o['outcomeDescription']
-    
-    # # get Veracross classes list
-    # classes = asyncio.run(get_classes(campus))
-    # if classes:
-    #     token = classes['token']
+                p['outcomeDescription'] = o['outcomeDescription'].strip()
 
-    # # identify the assessed classes
-    # subjects_assessed =[]
-    # for p in proficiencies:
-    #     if p['veracrossSubjectID'] not in subjects_assessed:
-    #         subjects_assessed.append(p['veracrossSubjectID'])
+    # add Veracross outcome ID
+    for p in proficiencies:
+        for o in vx_outcomes_data:
+            if p['outcomeDescription'] == o['description'].split(":",1)[1].strip():
+                if 'veracrossOutcomeID' not in p:
+                    p['veracrossOutcomeID'] = []
+                if o['id'] not in p['veracrossOutcomeID']:
+                    p['veracrossOutcomeID'].append(o['id'])
 
-    # classes_assessed = []
-    # for s in subjects_assessed:
-    #     for c in classes['data']:
-    #         if s == c['course']['id']:
-    #             if c['id'] not in classes_assessed:
-    #                 print(c['course']['name'])
-    #                 classes_assessed.append(c['id'])
-    #                 # associate each proficiency to one (or more) identified classes 
-    #                 for p in proficiencies:
-    #                     if p['veracrossSubjectID'] == c['course']['id']:
-    #                         if 'veracrossClassID' not in p:
-    #                             p['veracrossClassID'] = []
-    #                         if c['course']['id'] not in p['veracrossClassID']:
-    #                             p['veracrossClassID'].append(c['id'])
+    # get Veracross classes list
+    classes = asyncio.run(get_classes(campus))
+    if classes:
+        token = classes['token']
 
-    # print(classes_assessed)
-    # # get Canvas users
-    # students = asyncio.run(get_all_students(campus))
+    # identify the assessed classes
+    subjects_assessed =[]
+    for p in proficiencies:
+        if p['veracrossSubjectID'] not in subjects_assessed:
+            subjects_assessed.append(p['veracrossSubjectID'])
 
-    # # add student's Veracross ID to each proficiency
-    # for p in proficiencies:
-    #     for s in students:
-    #         if p['userID'] == s['id']:
-    #             p['veracrossUserID'] = s['sisID']
-    #             p['userName'] = s['name']
+    classes_assessed = []
+    for s in subjects_assessed:
+        for c in classes['data']:
+            if s == c['course']['id']:
+                if c['id'] not in classes_assessed:
+                    classes_assessed.append(c['id'])
+                    # associate each proficiency to one (or more) identified classes 
+                    for p in proficiencies:
+                        if p['veracrossSubjectID'] == c['course']['id']:
+                            if 'veracrossClassID' not in p:
+                                p['veracrossClassID'] = []
+                            if c['course']['id'] not in p['veracrossClassID']:
+                                p['veracrossClassID'].append(c['id'])
 
-    # # get Veracross Qualitative Grades for each class assessed
-    # grades = asyncio.run(get_qualitative_grades(classes_assessed,'academics/qualitative_grades',campus,token))
-    # if grades:
-    #     token = grades['token']
-    # print(grades['data'][0])
+    # get Canvas users
+    students = asyncio.run(get_all_students(campus))
 
-    # # add Veracross Grade ID to each proficiency
-    # for p in proficiencies:
-    #     for g in grades['data']:
-    #         if p['veracrossUserID'] == g['student']['id'] and g['class']['id'] in p['veracrossClassID']:
-    #             if 'veracrossGradeID' not in p:
-    #                 p['veracrossGradeID'] = []
-    #             p['veracrossGradeID'].append(g['id'])
+    # add student's Veracross ID to each proficiency
+    for p in proficiencies:
+        for s in students:
+            if p['userID'] == s['id']:
+                p['veracrossUserID'] = s['sisID']
+                p['userName'] = s['name']
 
-    # print(proficiencies[0])
+    # get Veracross Qualitative Grades for each class assessed
+    grades = asyncio.run(get_qualitative_grades(classes_assessed,'academics/qualitative_grades',campus,token))
+    if grades:
+        token = grades['token']
+
+    # add Veracross Grade ID to each proficiency
+    for p in proficiencies:
+        for g in grades['data']:
+            if p['veracrossUserID'] == g['student']['id'] and g['class']['id'] in p['veracrossClassID'] and g['rubric_criteria']['id'] in p['veracrossOutcomeID']:
+                if 'veracrossGradeID' not in p:
+                    p['veracrossGradeID'] = g['id']
+                else:
+                    return 'More than 1 Veracross Grade ID was found for the same final proficiency!'
+
+    print(proficiencies[0])
     
     return 'OK!'
 

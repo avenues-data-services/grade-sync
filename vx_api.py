@@ -61,7 +61,6 @@ async def vx_api_get(client,semaphore,endpoint:str,campus:str,params=None,token=
                 "Authorization": "Bearer %s" % updated_token['access_token'],
                 "X-Page-Size": "1000",
                 "X-Page-Number": "%s" % str(page_num),
-                "X-API-Value-Lists": "include"
             }
             async with client.get(url=url, headers=headers, params=params, ssl=True) as resp:
                 resp_data = await resp.json()

@@ -1,3 +1,8 @@
+# TODO
+# check semester also for qualitative grades
+
+
+
 # main.py
 from flask import Flask
 import asyncio
@@ -7,11 +12,16 @@ from extension_api import get_all_proficiencies
 from extension_api import get_all_outcomes_links
 from extension_api import get_all_subjects
 from extension_api import get_proficiency_values
+from extension_api import get_all_letter_grades
+from extension_api import get_letter_grade_values
 from vx_tasks.get_classes import get_classes
 from vx_tasks.get_qualitative_grades import get_qualitative_grades
+from vx_tasks.get_letter_grades import get_letter_grades
+from vx_tasks.get_grading_periods import get_grading_periods
 from canvas_tasks.get_students import get_all_students
 from canvas_tasks.get_outcomes import get_outcomes
 from app import app
+from datetime import datetime
 import time
 
 
@@ -729,8 +739,8 @@ vx_outcomes_data = [
 def main():
     return 'Choose a route.'
 
-@app.route("/update_grades/<campus>")
-def update_grades(campus):
+@app.route("/update_proficiencies/<campus>/")
+def update_proficiencies(campus):
     # define school id
     if campus == 'sp':
         school_id = 3
@@ -837,16 +847,129 @@ def update_grades(campus):
     if grades:
         token = grades['token']
 
+    # get Veracross Grading Periods and define the current one
+    grading_periods = asyncio.run(get_grading_periods(campus,token))
+    if grading_periods:
+        token = grading_periods['token']
+    
+    for g in grading_periods['data']:
+        start_date = datetime.strptime(g['start_date'][:10], '%Y-%m-%d')
+        end_date = datetime.strptime(g['end_date'][:10], '%Y-%m-%d')
+        today = datetime.now()
+
+        if today >= start_date and today <= end_date: # valid date
+            if g['group']['description'] == 'SS Semesters':
+                if g['abbreviation'] == 'S1' or g['abbreviation'] == 'S2':
+                    current_grading_period = g['id']
+
     # add Veracross Grade ID to each proficiency
     for p in proficiencies:
         for g in grades['data']:
             if p['veracrossUserID'] == g['student']['id'] and g['class']['id'] in p['veracrossClassID'] and g['rubric_criteria']['id'] in p['veracrossOutcomeID']:
-                if 'veracrossGradeID' not in p:
-                    p['veracrossGradeID'] = g['id']
-                else:
-                    return 'More than 1 Veracross Grade ID was found for the same final proficiency!'
+                if g['grading_period']['id'] == current_grading_period:
+                    if 'veracrossGradeID' not in p:
+                        p['veracrossGradeID'] = g['id']
+                    else:
+                        return 'More than 1 Veracross Grade ID was found for the same final proficiency!'
+    
+    return 'OK!'
 
-    print(proficiencies[0])
+@app.route("/update_letter_grades/<campus>/")
+def update_letter_grades(campus):
+    # define school id
+    if campus == 'sp':
+        school_id = 3
+
+    # get all final proficiencies (Canvas Extension DB)
+    letter_grades = asyncio.run(get_all_letter_grades(school_id))
+
+    # get all subjects (Canvas Extension DB)
+    subjects = asyncio.run(get_all_subjects(school_id))
+
+    # get all letter grade values (Canvas Extension DB)
+    letter_grade_values = asyncio.run(get_letter_grade_values())
+
+    # add letter grades as expected by Veracross
+    for l in letter_grades:
+        for v in letter_grade_values:
+            if l['letterGradeValueID'] == v['letterGradeValueID']:
+                l['veracrossLetterGrade'] = v['letterGradeDesc'].replace('Warning', 'NR')
+
+    # add veracrossSubjectID to each proficiency
+    for l in letter_grades:
+        for s in subjects:
+            if l['subjectID'] == s['subjectID']:
+                l['subjectName'] = s['subjectName']
+                l['gradeLevel'] = s['gradeLevel']
+                l['veracrossSubjectID'] = s['veracrossSubjectID']
+                l['academicYear'] = s['academicYear']
+
+    # get Veracross classes list
+    classes = asyncio.run(get_classes(campus))
+    if classes:
+        token = classes['token']
+
+    # identify the assessed classes
+    subjects_assessed =[]
+    for l in letter_grades:
+        if l['veracrossSubjectID'] not in subjects_assessed:
+            subjects_assessed.append(l['veracrossSubjectID'])
+
+    classes_assessed = []
+    for s in subjects_assessed:
+        for c in classes['data']:
+            if s == c['course']['id']:
+                if c['id'] not in classes_assessed:
+                    classes_assessed.append(c['id'])
+                    # associate each letter grade to one (or more) identified classes 
+                    for l in letter_grades:
+                        if l['veracrossSubjectID'] == c['course']['id']:
+                            if 'veracrossClassID' not in l:
+                                l['veracrossClassID'] = []
+                            if c['course']['id'] not in l['veracrossClassID']:
+                                l['veracrossClassID'].append(c['id'])
+
+    # get Canvas users
+    students = asyncio.run(get_all_students(campus))
+
+    # add student's Veracross ID to each proficiency
+    for l in letter_grades:
+        for s in students:
+            if l['userID'] == s['id']:
+                l['veracrossUserID'] = s['sisID']
+                l['userName'] = s['name']
+
+    # get Veracross letter grades for each class assessed
+    grades = asyncio.run(get_letter_grades(classes_assessed,'academics/numeric_grades',campus,token))
+    if grades:
+        token = grades['token']
+
+    # get Veracross Grading Periods and define the current one
+    grading_periods = asyncio.run(get_grading_periods(campus,token))
+    if grading_periods:
+        token = grading_periods['token']
+    
+    for g in grading_periods['data']:
+        start_date = datetime.strptime(g['start_date'][:10], '%Y-%m-%d')
+        end_date = datetime.strptime(g['end_date'][:10], '%Y-%m-%d')
+        today = datetime.now()
+
+        if today >= start_date and today <= end_date: # valid date
+            if g['group']['description'] == 'SS Semesters':
+                if g['abbreviation'] == 'S1' or g['abbreviation'] == 'S2':
+                    current_grading_period = g['id']
+
+    # add Veracross Grade ID to each proficiency
+    for l in letter_grades:
+        for g in grades['data']:
+            if l['veracrossUserID'] == g['student']['id'] and g['class']['id'] in l['veracrossClassID']:
+                if g['grading_period']['id'] == current_grading_period:
+                    if 'veracrossGradeID' not in l:
+                        l['veracrossGradeID'] = g['id']
+                    else:
+                        return 'More than 1 Veracross Grade ID was found for the same letter grade!'
+
+    print(letter_grades[0],flush=True)
     
     return 'OK!'
 

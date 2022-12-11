@@ -34,6 +34,10 @@ async def vx_api_request_new_token(client:ClientSession, campus:str):
         'academics.qualitative_grades:list',
         'academics.config.grading_periods:list',
         'classes:list',
+        'academics.numeric_grades:list',
+        'academics.numeric_grades:read',
+        'academics.numeric_grades:update',
+        'academics.config.grading_periods:list',
     ]
 
     payload = {

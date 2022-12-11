@@ -76,3 +76,34 @@ async def get_proficiency_values():
     })
 
     return proficiency_values
+
+async def get_all_letter_grades(campus_id: str):
+    results = LetterGrades.query.filter_by(
+        SchoolID=int(campus_id)
+    ).all()
+
+    letter_grades = []
+    for r in results:
+        letter_grades.append({
+        'letterGradeID': r.LetterGradeID,
+        'userID': r.UserID,
+        'subjectID': r.SubjectID,
+        'letterGradeValueID': r.LetterGradeValueID,
+        'graderID': r.GraderID,
+        'overwritten': r.Overwritten,
+        'schoolID': r.SchoolID,
+    })
+
+    return letter_grades
+
+async def get_letter_grade_values():
+    results = LetterGradeValues.query.all()
+
+    letter_grade_values = []
+    for r in results:
+        letter_grade_values.append({
+        'letterGradeValueID': r.LetterGradeValueID,
+        'letterGradeDesc': r.LetterGradeDesc,
+    })
+
+    return letter_grade_values

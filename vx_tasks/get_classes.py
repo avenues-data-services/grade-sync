@@ -1,15 +1,14 @@
-# get_qualitative_grades.py
+# get_classes.py
 import asyncio
 from aiohttp import ClientSession
 from vx_api import vx_api_get
 
-async def get_qualitative_grades(classes,endpoint:str,campus:str,token=None):
+async def get_classes(campus:str):
     semaphore = asyncio.Semaphore(20)
 
     async with ClientSession() as client:
         resp = await asyncio.gather(*[
-            asyncio.create_task(vx_api_get(client,semaphore,endpoint,campus,[('class_id', str(c))],token))
-            for c in classes
+            asyncio.create_task(vx_api_get(client,semaphore,'classes',campus))
         ])
 
         data = []
